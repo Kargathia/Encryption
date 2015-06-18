@@ -9,8 +9,6 @@ import EncryptionAPI.EncryptionManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,17 +21,34 @@ public class Validating {
      */
     public static void main(String[] args) {
         try {
-            System.out.println("File to validate?");
             Scanner sc = new Scanner(System.in);
-            String signedFile = sc.nextLine();
-            System.out.println("Save file as?");
-            String destFile = sc.nextLine();
+            String signedFile, destFile;
+
+            while (true) {
+                System.out.println("File to validate?");
+                signedFile = sc.nextLine();
+                if (signedFile.trim().isEmpty() || new File(signedFile).length() == 0) {
+                    System.out.println("Error: invalid filename or file not found");
+                } else {
+                    break;
+                }
+            }
+
+            while (true) {
+                System.out.println("Save file as?");
+                destFile = sc.nextLine();
+                if (destFile.trim().isEmpty()) {
+                    System.out.println("Error: invalid filename");
+                } else {
+                    break;
+                }
+            }
 
             EncryptionManager manager = new EncryptionManager();
             File publicKey = new File("files/public.key");
             manager.readPublicKey(publicKey);
-            System.out.println("Signature verified: " + 
-                    manager.verifySignature(signedFile, destFile));
+            System.out.println("Signature verified: "
+                    + manager.verifySignature(signedFile, destFile));
 
 //            String message = new String(messageBytes);
 //            System.out.println("Message: " + message);
